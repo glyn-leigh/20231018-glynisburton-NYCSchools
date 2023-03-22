@@ -109,7 +109,8 @@ class NYCRepository {
 
     }
 
-    fun getMainSchoolListBoro(boro:String):LiveData<List<SchoolsModel>>{
+    //Left in for possible future impl
+    /*fun getMainSchoolListBoro(boro:String):LiveData<List<SchoolsModel>>{
         val liveData = MutableLiveData<List<SchoolsModel>>()
 
         schoolClient.getSchoolByBorough(boro).enqueue(object: Callback<List<SchoolsModel>>{
@@ -134,7 +135,7 @@ class NYCRepository {
 
         return liveData
 
-    }
+    }*/
 
     fun getMainSchoolListDbn(dbn:String):LiveData<List<SchoolsModel>>{
         val liveData = MutableLiveData<List<SchoolsModel>>()
@@ -162,6 +163,7 @@ class NYCRepository {
         return liveData
 
     }
+
 
     }
 

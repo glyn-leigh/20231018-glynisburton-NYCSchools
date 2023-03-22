@@ -28,6 +28,7 @@ interface SchoolsApiInterfaceBase {
     @GET("s3k6-pzi2.json")
     fun getSchoolByZip(@Query("zip") zip:String): Call<List<SchoolsModel>>
     @GET("s3k6-pzi2.json")
+    //Taken out for time
     fun getSchoolByBorough(@Query("borough") borough:String): Call<List<SchoolsModel>>
     @GET("s3k6-pzi2.json")
     fun getSchoolByDBN(@Query("dbn") dbn:String): Call<List<SchoolsModel>>

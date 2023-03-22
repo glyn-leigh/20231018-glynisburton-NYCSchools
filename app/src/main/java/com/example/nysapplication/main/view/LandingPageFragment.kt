@@ -1,5 +1,9 @@
 package com.example.nysapplication.main.view
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -30,8 +35,31 @@ class LandingPageFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+    }
 
+    private fun checkForInternet(context: Context): Boolean {
 
+        // register activity with the connectivity manager service
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            val network = connectivityManager.activeNetwork ?: return false
+            val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+
+            return when {
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+
+                else -> false
+            }
+        } else {
+            // if the android version is below M
+            @Suppress("DEPRECATION") val networkInfo =
+                connectivityManager.activeNetworkInfo ?: return false
+            @Suppress("DEPRECATION")
+            return networkInfo.isConnected
+        }
     }
 
 
@@ -50,17 +78,28 @@ class LandingPageFragment : Fragment() {
     }
 
     fun populateRecylcerView(){
-        if (db.schoolList.isEmpty()) {
-            callBaseSchoolList()
+        //if there is data (from a search) in the db, don't update the recycleview with the init call
+        val internet = checkForInternet(requireActivity())
+        if(internet) {
+            if (db.schoolList.isEmpty()) {
+                callBaseSchoolList()
 
-        }
-        else{
-            setUpRecyclerView()
+            } else {
+                setUpRecyclerView()
+            }
+        }else{
+            val text = "Please check your Internet Connection"
+            val duration = Toast.LENGTH_SHORT
+
+            val toast = Toast.makeText(requireActivity(), text, duration)
+            toast.show()
+
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //init views, would have used viewbinding/databinding
         recyclerview = view.findViewById(R.id.school_recycler)
         searchEdit = view.findViewById(R.id.search_text)
         searchButton = view.findViewById(R.id.search_button)
@@ -80,12 +119,12 @@ class LandingPageFragment : Fragment() {
         adapter.onItemClick = {
             db.schoolsModel= it
             navigateToSchools()
-            Log.d("TAG", it.school_name)
+            //Log.d("TAG", it.school_name)
         }
     }
 
     fun updateRecycler(){
-        val type = determineType(searchEdit.text.toString())
+        val type = viewModel.determineType(searchEdit.text.toString())
         when (type){
             "zip" -> {
                 viewModel.getSchoolByZip(searchEdit.text.toString()).observe(viewLifecycleOwner, Observer {
@@ -113,27 +152,12 @@ class LandingPageFragment : Fragment() {
 
             }
             "refresh" -> {
+                //if nothing is in the field, reset the view
                 callBaseSchoolList()
                 setUpRecyclerView()
 
             }
         }
-
-    }
-    fun determineType(input:String):String{
-        val numberMatcher  = "-?[0-9]+(\\.[0-9]+)?".toRegex()
-        val letterMatcher = "^[a-zA-Z]*\$".toRegex()
-
-        if(input.matches(numberMatcher)){
-            return "zip"
-        }
-        /*if(input.matches(letterMatcher)){
-            return "boro"
-        }*/
-        if(input == ""){
-            return "refresh"
-        }
-        return "dbn"
 
     }
 
