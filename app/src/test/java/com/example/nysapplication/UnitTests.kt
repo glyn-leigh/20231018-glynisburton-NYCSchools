@@ -2,18 +2,11 @@ package com.example.nysapplication
 
 import com.example.nysapplication.main.model.*
 import com.example.nysapplication.main.respository.NYCRepository
-import com.example.nysapplication.main.viewmodel.NYCViewModel
-import com.google.gson.JsonParser
-import io.mockk.clearStaticMockk
-import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Assert
 import org.junit.Test
 import retrofit2.Callback
-import retrofit2.Response
 
 
 /**

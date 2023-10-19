@@ -1,17 +1,21 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id("com.google.dagger.hilt.android")
+    id "kotlin-parcelize"
+
 }
 
 android {
     namespace 'com.example.nysapplication'
-    compileSdk 33
+    compileSdk 34
     dataBinding { enabled = true }
 
     defaultConfig {
         applicationId "com.example.nysapplication"
         minSdk 24
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -25,57 +29,92 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_9
+        targetCompatibility JavaVersion.VERSION_1_9
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '9'
     }
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.3"
+    }
+
+
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.10.0'
+    implementation "androidx.compose.material3:material3:1.1.2"
     implementation 'android.arch.lifecycle:extensions:1.1.1'
 
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    implementation 'com.google.code.gson:gson:2.8.7'
+
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    debugImplementation("androidx.compose.ui:ui-tooling")
+
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
-    implementation 'androidx.fragment:fragment-ktx:+'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
+    implementation 'androidx.fragment:fragment-ktx:1.6.1'
 
-    implementation 'com.google.dagger:hilt-android:2.45'
-    annotationProcessor 'com.google.dagger:hilt-compiler:2.45'
+    implementation("com.google.dagger:hilt-android:2.48")
+    kapt("com.google.dagger:hilt-android-compiler:2.48")
+    kapt 'com.google.dagger:hilt-compiler:2.48'
 
     // Kotlin
-    implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
-    implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.4")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.4")
 
     // Feature module Support
-    implementation("androidx.navigation:navigation-dynamic-features-fragment:2.5.3")
+    implementation("androidx.navigation:navigation-dynamic-features-fragment:2.7.4")
 
     // Testing Navigation
-    androidTestImplementation("androidx.navigation:navigation-testing:2.5.3")
+    androidTestImplementation("androidx.navigation:navigation-testing:2.7.4")
 
     // Jetpack Compose Integration
-    implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation("androidx.navigation:navigation-compose:2.7.4")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+    // For instrumentation tests
+    androidTestImplementation  'com.google.dagger:hilt-android-testing:2.48'
+    kaptAndroidTest 'com.google.dagger:hilt-compiler:2.48'
+    androidTestImplementation "io.mockk:mockk-android:1.13.8"
+    androidTestImplementation "io.mockk:mockk-agent:1.13.8"
+    testImplementation "io.mockk:mockk-android:1.13.8"
+    testImplementation "io.mockk:mockk-agent:1.13.8"
+
+    // For local unit tests
+    testImplementation 'com.google.dagger:hilt-android-testing:2.48'
+    kaptTest 'com.google.dagger:hilt-compiler:2.48'
+
+
+
 
 
     // For instrumentation tests
-    androidTestImplementation  'com.google.dagger:hilt-android-testing:2.45'
-    androidTestAnnotationProcessor 'com.google.dagger:hilt-compiler:2.45'
+    androidTestImplementation  'com.google.dagger:hilt-android-testing:2.48.1'
+    androidTestAnnotationProcessor 'com.google.dagger:hilt-compiler:2.48.1'
 
     // For local unit tests
-    testImplementation 'com.google.dagger:hilt-android-testing:2.45'
-    testAnnotationProcessor 'com.google.dagger:hilt-compiler:2.45'
+    testImplementation 'com.google.dagger:hilt-android-testing:2.48.1'
+    testAnnotationProcessor 'com.google.dagger:hilt-compiler:2.48.1'
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     //Mockk
     testImplementation "io.mockk:mockk:1.12.4"
 
+}
+
+kapt {
+    correctErrorTypes true
 }
