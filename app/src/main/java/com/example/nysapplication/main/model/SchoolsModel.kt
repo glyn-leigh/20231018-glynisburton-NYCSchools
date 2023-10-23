@@ -11,10 +11,10 @@ data class SchoolsModel(
     val borough:String = "",
     val location:String = "",
     var overview_paragraph:String = "",
-    val website:String = "",
+    var website:String = "",
     val total_students:Int = 0,
     val graduation_rate:Float = 0f,
     val college_career_rate:Float = 0f,
     val academicopportunities1:String = "",
-    val phoneNumber:String = ""
+    var phoneNumber:String = ""
 ): Parcelable
